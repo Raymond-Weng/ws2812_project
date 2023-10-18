@@ -2,14 +2,18 @@
 
 #define SERIAL_BAUD 9600   // baud rate
 #define NUM_LEDS_TOTAL 10  // 總LED數量
-#define LED_PIN 11         // 連接第一個LED的腳位
+#define LED_PIN 9         // 連接第一個LED的腳位
 #define BUTTON_PINS 2      // 連接按鈕的腳位
+
+int delay[9] = {500, 500, 500, 500, 500, 500, 500, 500, 500}
 
 Adafruit_NeoPixel leds(NUM_LEDS_TOTAL, LED_PIN, NEO_GRB + NEO_KHZ800);  //  定義ws2812燈條
 
 bool last_status;
 bool status;
 int unit = 0;
+long last_update;
+bool light;
 
 void setup() {
   Serial.begin(SERIAL_BAUD);
@@ -21,13 +25,22 @@ void setup() {
 
 void loop() {
 
-  if (ifBotton()) unit++; //  按鈕功能函數, 如果按鈕被按下, unit +1  
+  if (!light && ifBotton()){ //  按鈕功能函數, 如果按鈕被按下, unit +1  
+    light = true;
+    unit++;
+    last_update = millis();
+  }
   setunitColor(255, 255, 71);  //  香蕉黃
 
   if (unit > NUM_LEDS_TOTAL) {  // 超過最大燈數
     Serial.println("restart!");
     setunitColor(0, 0, 0);  //  暗
     unit = 0;
+  }
+
+  if(light && millis() - last_update > delay[units - 1]){
+    unit++;
+    last_update = millis();
   }
 
   Serial.println(status);
