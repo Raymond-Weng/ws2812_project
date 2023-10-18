@@ -4,8 +4,10 @@
 #define NUM_LEDS_TOTAL 10  // 總LED數量
 #define LED_PIN 9         // 連接第一個LED的腳位
 #define BUTTON_PINS 2      // 連接按鈕的腳位
+#define LIGHT_PER_ROW 5   // 每行上的按鈕數量
+#define BREAK_BETWEEN_ROWS 2    //行與行之間不亮的燈泡數量
 
-int delay[9] = {500, 500, 500, 500, 500, 500, 500, 500, 500}
+int delay[9] = {500, 500, 500, 500, 500, 500, 500, 500, 500}  //每段燈泡出現的時間差（毫秒）
 
 Adafruit_NeoPixel leds(NUM_LEDS_TOTAL, LED_PIN, NEO_GRB + NEO_KHZ800);  //  定義ws2812燈條
 
@@ -25,17 +27,16 @@ void setup() {
 
 void loop() {
 
-  if (!light && ifBotton()){ //  按鈕功能函數, 如果按鈕被按下, unit +1  
-    light = true;
-    unit++;
-    last_update = millis();
-  }
-  setunitColor(255, 255, 71);  //  香蕉黃
-
-  if (unit > NUM_LEDS_TOTAL) {  // 超過最大燈數
-    Serial.println("restart!");
-    setunitColor(0, 0, 0);  //  暗
-    unit = 0;
+  if (ifBotton()){ //  按鈕功能函數
+    if(light){
+      setunitColor(0, 0, 0);  //  暗
+      unit = 0;
+      light = false;
+    }else{
+      light = true;
+      unit++;
+      last_update = millis();
+    }
   }
 
   if(light && millis() - last_update > delay[units - 1]){
@@ -43,13 +44,22 @@ void loop() {
     last_update = millis();
   }
 
+  setunitColor(255, 255, 71);  //  香蕉黃
+
   Serial.println(status);
   delay(100);  //防死機
 }
 
 void setunitColor(int red, int green, int blue) {  // 設定LED顏色
-  for (int i = 0; i < unit; i++) {
-    leds.setPixelColor(i, red, green, blue);
+  for (int i = 0; i < unit;) {
+    for(int r = 0; r < LIGHT_PER_ROW; r++){
+      leds.setPixelColor(i + r, red, green, blue);
+    }
+    i += LIGHT_PER_ROW;
+    for(int r = 0; r < BREAK_BETWEEN_ROWS; r++){
+      leds.setPixelColor(i + r, 0, 0, 0);
+    }
+    i += BREAK_BETWEEN_ROWS;
   }
   leds.show();
 }
