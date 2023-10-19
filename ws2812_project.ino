@@ -7,7 +7,7 @@
 #define LIGHT_PER_ROW 5   // 每行上的按鈕數量
 #define BREAK_BETWEEN_ROWS 2    //行與行之間不亮的燈泡數量
 
-int delay[9] = {500, 500, 500, 500, 500, 500, 500, 500, 500}  //每段燈泡出現的時間差（毫秒）
+int delayTime[9] = {500, 500, 500, 500, 500, 500, 500, 500, 500};  //每段燈泡出現的時間差（毫秒）
 
 Adafruit_NeoPixel leds(NUM_LEDS_TOTAL, LED_PIN, NEO_GRB + NEO_KHZ800);  //  定義ws2812燈條
 
@@ -39,7 +39,7 @@ void loop() {
     }
   }
 
-  if(light && millis() - last_update > delay[units - 1]){
+  if(light && millis() - last_update > delayTime[unit - 1]){
     unit++;
     last_update = millis();
   }
