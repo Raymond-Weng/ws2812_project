@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #define SERIAL_BAUD 9600   // baud rate
-#define NUM_LEDS_TOTAL 10  // 總LED數量
+#define NUM_LEDS_TOTAL 30  // 總LED數量
 #define LED_PIN 9         // 連接第一個LED的腳位
 #define BUTTON_PINS 2      // 連接按鈕的腳位
 #define LIGHT_PER_ROW 5   // 每行上的按鈕數量
@@ -39,7 +39,7 @@ void loop() {
     }
   }
 
-  if(light && millis() - last_update > delayTime[unit - 1]){
+  if(light && unit - 1 < sizeof(delayTime) / sizeof(delayTime[0]) && millis() - last_update > delayTime[unit - 1]){
     unit++;
     last_update = millis();
   }
