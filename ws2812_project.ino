@@ -1,13 +1,13 @@
 #include <Adafruit_NeoPixel.h>
 
 #define SERIAL_BAUD 9600   // baud rate
-#define NUM_LEDS_TOTAL 30  // 總LED數量
+#define NUM_LEDS_TOTAL 90  // 總LED數量
 #define LED_PIN 9         // 連接第一個LED的腳位
 #define BUTTON_PINS 2      // 連接按鈕的腳位
 #define LIGHT_PER_ROW 5   // 每行上的按鈕數量
 #define BREAK_BETWEEN_ROWS 2    //行與行之間不亮的燈泡數量
 
-int delayTime[9] = {500, 500, 500, 500, 500, 500, 500, 500, 500};  //每段燈泡出現的時間差（毫秒）
+int delayTime[9] = {900, 800, 700, 600, 500, 400, 300, 200, 100};  //每段燈泡出現的時間差（毫秒）
 
 Adafruit_NeoPixel leds(NUM_LEDS_TOTAL, LED_PIN, NEO_GRB + NEO_KHZ800);  //  定義ws2812燈條
 
@@ -51,7 +51,7 @@ void loop() {
 }
 
 void setunitColor(int red, int green, int blue) {  // 設定LED顏色
-  for (int i = 0; i < unit;) {
+  for (int i = 0; i < unit * 7;) {
     for(int r = 0; r < LIGHT_PER_ROW; r++){
       leds.setPixelColor(i + r, red, green, blue);
     }
