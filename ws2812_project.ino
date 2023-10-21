@@ -51,14 +51,22 @@ void loop() {
 }
 
 void setunitColor(int red, int green, int blue) {  // 設定LED顏色
-  for (int i = 0; i < unit * 7;) {
+  int skipped_lights = 0; //被跳過的燈泡數量
+  for (int i = 0; i < unit * (LIGHT_PER_ROW + BREAK_BETWEEN_ROWS) + skipped_lights;) {
+    if(30 - (i % 30) < LIGHT_PER_ROW){ //跳過接縫處燈泡
+      // for(int r = 0; r < 30 - (i % 30); r++){ //不亮的燈泡
+      //   leds.setPixelColor(i + r, 0, 0, 0);
+      // }
+      skipped_lights += 30 - (i % 30);
+      i += skipped_lights;
+    }
     for(int r = 0; r < LIGHT_PER_ROW; r++){
       leds.setPixelColor(i + r, red, green, blue);
     }
     i += LIGHT_PER_ROW;
-    for(int r = 0; r < BREAK_BETWEEN_ROWS; r++){
-      leds.setPixelColor(i + r, 0, 0, 0);
-    }
+    // for(int r = 0; r < BREAK_BETWEEN_ROWS; r++){ //不亮的燈泡
+    //   leds.setPixelColor(i + r, 0, 0, 0);
+    // }
     i += BREAK_BETWEEN_ROWS;
   }
   leds.show();
