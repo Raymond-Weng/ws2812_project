@@ -27,6 +27,8 @@ void setup() {
   Serial.println("start!");
   leds.begin();
   leds.show();
+  leds2.begin();
+  leds2.show();
   pinMode(BUTTON_PINS, INPUT_PULLUP);
 }
 
